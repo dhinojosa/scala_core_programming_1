@@ -14,6 +14,4 @@ class MethodsSpec extends FunSuite with Matchers{
     def foo(x:Int, y:Int):Int = x + y
     foo(4, 5) should be (9)
   }
-
-  test("")
 }
