@@ -32,6 +32,9 @@ tags
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 
+# Hydra
+.idea/hydra.xml
+
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
