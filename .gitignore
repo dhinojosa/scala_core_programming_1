@@ -180,3 +180,4 @@ local.properties
 ### Scala template
 *.class
 *.log
+.cache-tests
