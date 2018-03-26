@@ -16,19 +16,19 @@ class ClassesSpec extends FunSuite with Matchers {
     pending
   }
 
-  test("Preconditions can be made with require") {
+  test("Preconditions can be made with require and are used in the class") {
     pending
   }
 
-  test("Subclassing") {
+  test("Subclassing in Scala") {
     pending
   }
 
-  test("Abstract Classes") {
+  test("Abstract Classes in Scala") {
     pending
   }
 
-  test("Generic Classes") {
+  test("Generic Classes in Scala") {
     pending
   }
 }

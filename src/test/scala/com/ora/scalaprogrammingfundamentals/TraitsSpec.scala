@@ -3,7 +3,10 @@ package com.ora.scalaprogrammingfundamentals
 import org.scalatest.{FunSuite, Matchers}
 
 class TraitsSpec extends FunSuite with Matchers {
-  test("A trait is analogous to an interface in Java") {
+  test(
+    """A trait is analogous to an interface in Java. Classes and
+      |  objects can extend traits but traits cannot be instantiated
+      |  and therefore have no parameters""".stripMargin) {
     pending
   }
 
@@ -13,19 +16,34 @@ class TraitsSpec extends FunSuite with Matchers {
     pending
   }
 
-  test("Traits are specifically called that just for mixing in functionality") {
+  test("Traits are used for mixing in functionality, this is called a mixin") {
     pending
   }
 
-  test("You can extends from a trait that was not built in to begin with") {
+  test(
+    """You can extends from a trait that was not built in to begin with, be
+      |  careful that the trait is instantiated first, and may still not
+      |  have a desired effect.""".stripMargin) {
     pending
   }
 
-  test("extends vs. with") {
+  test(
+    """The confusing thing about traits is that if you
+      | extends from a class then extend with extends, and then use with
+      | to list all the traits you wish to inherit, if you do extends from
+      | a superclass then you will extends with one trait and with the
+      | remaining traits""".stripMargin) {
     pending
   }
 
-  test("Avoiding the diamond of death") {
+  test(
+    """Avoiding the diamond of death.
+      | https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem.
+      | In Scala, since traits can inherit as a diamond shape,
+      | there has to be a strategy. Instantiation goes from left to right
+      | (used to be right to left),
+      | and instantiation is marked for reuse.""".stripMargin) {
+
     var list = List[String]()
 
     trait T1 {
@@ -40,7 +58,11 @@ class TraitsSpec extends FunSuite with Matchers {
       list = list :+ "Instantiated T3"
     }
 
-    class C1 extends T2 with T3 {
+    trait T4 extends T1 {
+      list = list :+ "Instantiated T4"
+    }
+
+    class C1 extends T2 with T3 with T4 {
       list = list :+ "Instantiated C1"
     }
 
@@ -51,7 +73,11 @@ class TraitsSpec extends FunSuite with Matchers {
     pending
   }
 
-  test("Stackable traits") {
+  test(
+    """Stackable traits are traits stacked one atop another,
+      |  make sure that all overrides
+      |  are labelled, abstract override.  The order of the mixins are important.
+      |  Traits on the right take effect first""".stripMargin) {
 
     abstract class IntQueue {
       def get(): Int
@@ -95,7 +121,15 @@ class TraitsSpec extends FunSuite with Matchers {
     pending
   }
 
-  test("Self types") {
+  test(
+    """Self types declares that a trait must be mixed into another trait.
+      |The relationship is the following:
+      |
+      | * B extends A, then B is an A.
+      | * When you use self-types, B requires an A
+      |
+      | This is used for a pattern called the cake pattern, but is also a
+      | way for the class to define the inheritance behaviors""".stripMargin) {
     trait Moveable {
       def increaseSpeed(ms: Int): Moveable
       def decreaseSpeed(ms: Int): Moveable
