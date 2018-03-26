@@ -3,47 +3,70 @@ package com.ora.scalaprogrammingfundamentals
 import org.scalatest.{FunSuite, Matchers}
 
 class TraitsSpec extends FunSuite with Matchers {
-  test(
-    """A trait is analogous to an interface in Java. Classes and
-      |  objects can extend traits but traits cannot be instantiated
-      |  and therefore have no parameters""".stripMargin) {
-    pending
+  test("A trait is analogous to an interface in Java") {
+    trait Vehicle {
+      def increaseSpeed(ms: Int): Vehicle
+
+      def decreaseSpeed(ms: Int): Vehicle
+
+      def currentSpeedMetersPerHour: Int
+    }
+
+    class Bicycle(val currentSpeedMetersPerHour: Int) extends Vehicle {
+      override def increaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + ms)
+
+      override def decreaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - ms)
+    }
+
+    new Bicycle(1)
+      .increaseSpeed(3)
+      .decreaseSpeed(1)
+      .currentSpeedMetersPerHour should be(3)
   }
 
   test(
     """Just like Java 8 interfaces, you can have concrete
       |  methods (known as default methods in Java)""".stripMargin) {
-    pending
+    trait Vehicle {
+      def increaseSpeed(ms: Int): Vehicle
+
+      def decreaseSpeed(ms: Int): Vehicle
+
+      def currentSpeedMetersPerHour: Int
+
+      final def currentSpeedMilesPerHour: Double = currentSpeedMetersPerHour *
+        0.000621371
+    }
+
+    class Bicycle(val currentSpeedMetersPerHour: Int) extends Vehicle {
+      override def increaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + mh)
+
+      override def decreaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - mh)
+    }
+
+    new Bicycle(4).currentSpeedMilesPerHour should be(0.002 +- .005)
   }
 
-  test("Traits are used for mixing in functionality, this is called a mixin") {
-    pending
+  test("Traits are specifically called that just for mixing in functionality") {
+    val stamp = Stamp("Jimi Hendrix", 2014)
+    stamp.whoAmI_?() should be("Stamp")
   }
 
-  test(
-    """You can extends from a trait that was not built in to begin with, be
-      |  careful that the trait is instantiated first, and may still not
-      |  have a desired effect.""".stripMargin) {
-    pending
+  test("You can extends from a trait that was not built in to begin with") {
+
   }
 
-  test(
-    """The confusing thing about traits is that if you
-      | extends from a class then extend with extends, and then use with
-      | to list all the traits you wish to inherit, if you do extends from
-      | a superclass then you will extends with one trait and with the
-      | remaining traits""".stripMargin) {
-    pending
+  test("extends vs. with") {
+    val baseballCard =
+      new BaseballCard(1998, "Topps", "Ken Griffey Jr.", "Seattle", "Mariners")
+    baseballCard.whoAmI_?() should be("BaseballCard")
   }
 
-  test(
-    """Avoiding the diamond of death.
-      | https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem.
-      | In Scala, since traits can inherit as a diamond shape,
-      | there has to be a strategy. Instantiation goes from left to right
-      | (used to be right to left),
-      | and instantiation is marked for reuse.""".stripMargin) {
-
+  test("Avoiding the diamond of death") {
     var list = List[String]()
 
     trait T1 {
@@ -58,11 +81,7 @@ class TraitsSpec extends FunSuite with Matchers {
       list = list :+ "Instantiated T3"
     }
 
-    trait T4 extends T1 {
-      list = list :+ "Instantiated T4"
-    }
-
-    class C1 extends T2 with T3 with T4 {
+    class C1 extends T2 with T3 {
       list = list :+ "Instantiated C1"
     }
 
@@ -70,14 +89,15 @@ class TraitsSpec extends FunSuite with Matchers {
     new C1
     list = list :+ "Created C1"
 
-    pending
+    list should contain inOrder(
+      "Creating C1",
+      "Instantiated T1",
+      "Instantiated T2",
+      "Instantiated T3",
+      "Created C1")
   }
 
-  test(
-    """Stackable traits are traits stacked one atop another,
-      |  make sure that all overrides
-      |  are labelled, abstract override.  The order of the mixins are important.
-      |  Traits on the right take effect first""".stripMargin) {
+  test("Stackable traits") {
 
     abstract class IntQueue {
       def get(): Int
@@ -118,18 +138,10 @@ class TraitsSpec extends FunSuite with Matchers {
     val myQueue = new BasicIntQueue with Doubling with Incrementing
 
     myQueue.put(4)
-    pending
+    myQueue.get should be(10)
   }
 
-  test(
-    """Self types declares that a trait must be mixed into another trait.
-      |The relationship is the following:
-      |
-      | * B extends A, then B is an A.
-      | * When you use self-types, B requires an A
-      |
-      | This is used for a pattern called the cake pattern, but is also a
-      | way for the class to define the inheritance behaviors""".stripMargin) {
+  test("Self types") {
     trait Moveable {
       def increaseSpeed(ms: Int): Moveable
       def decreaseSpeed(ms: Int): Moveable
@@ -150,6 +162,8 @@ class TraitsSpec extends FunSuite with Matchers {
         currentSpeed + ms)
     }
 
-    pending
+    val car = new Car("Peugeot", "308", 0)
+    car.currentSpeed should be(0)
+    car.make should be ("Peugeot")
   }
 }
