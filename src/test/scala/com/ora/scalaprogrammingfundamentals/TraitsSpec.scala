@@ -2,6 +2,8 @@ package com.ora.scalaprogrammingfundamentals
 
 import org.scalatest.{FunSuite, Matchers}
 
+import scala.collection.mutable.ArrayBuffer
+
 class TraitsSpec extends FunSuite with Matchers {
   test("A trait is analogous to an interface in Java") {
     trait Vehicle {
@@ -57,7 +59,17 @@ class TraitsSpec extends FunSuite with Matchers {
   }
 
   test("You can extends from a trait that was not built in to begin with") {
+     trait Log {
+       private val _log: ArrayBuffer[String] = ArrayBuffer[String]()
+       def log(s:String):Unit = _log += s
+       def entries: ArrayBuffer[String] = _log
+     }
 
+     val o = new Object with Log
+     o.log("Sent one statement")
+     o.log("Sent two statements")
+
+     o.entries should contain inOrder("Sent one statement", "Sent two statements")
   }
 
   test("extends vs. with") {
