@@ -71,8 +71,7 @@ class MethodsSpec extends FunSuite with Matchers {
 
 
   test("""Turning an method into a function""") {
-    def multBy3(x:Int) = x * 3
-    List(1, 2, 3).map(r => multBy3(r)) should contain inOrder (3, 6, 9)
+    pending
   }
 
   test(
