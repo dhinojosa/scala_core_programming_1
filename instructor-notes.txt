@@ -1,7 +1,7 @@
-1. Start with manual project pratham
-   a. add scala test
-   b. show the basics: compile, test, clean, package, console
-   c. Open in IntelliJ
+1. Start with manual project: Pratham (Hindi for first)
+   a. Add scala test dependency and show how
+   b. Show the basics: compile, test, clean, package, console
+   c. Open in IntelliJ (Use import)
    d. Open in Eclipse
       1. addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.4")
       2. EclipseKeys.withSource := true
@@ -9,3 +9,4 @@
       4. Run Eclipse
    e. Warning do not use 2.12.5, it doesn't work with JDK 9 or 10
 2. Use giter8 project sbt new scala/hello-world.g8 and name it toinen (Finnish for second)
+   a. Show how that works
