@@ -7,24 +7,127 @@ class TraitsSpec extends FunSuite with Matchers {
     """A trait is analogous to an interface in Java. Classes and
       |  objects can extend traits but traits cannot be instantiated
       |  and therefore have no parameters""".stripMargin) {
-    pending
+
+    trait Vehicle {
+      def increaseSpeed(mh:Int):Vehicle
+      def decreaseSpeed(mh:Int):Vehicle
+      def currentSpeedMetersPerHour:Int
+    }
+
+    trait FunFactor {
+      def funFactor:Int
+    }
+
+    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle with FunFactor {
+      override def increaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + mh)
+
+      override def decreaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - mh)
+
+      override def funFactor: Int = 10
+    }
+
+    new Bicycle(1)
+      .increaseSpeed(3)
+      .decreaseSpeed(1)
+      .currentSpeedMetersPerHour should be (3)
   }
 
   test(
     """Just like Java 8 interfaces, you can have concrete
       |  methods (known as default methods in Java)""".stripMargin) {
-    pending
+    trait Vehicle {
+      def increaseSpeed(mh:Int):Vehicle
+      def decreaseSpeed(mh:Int):Vehicle
+      def currentSpeedMetersPerHour:Int
+      def currentSpeedMilesPerHour:Double =
+        currentSpeedMetersPerHour * 0.000621371
+    }
+
+    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle {
+      override def increaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + mh)
+
+      override def decreaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - mh)
+    }
+
+    new Bicycle(4).currentSpeedMilesPerHour should be (0.002 +- .005)
   }
 
   test("Traits are used for mixing in functionality, this is called a mixin") {
-    pending
+    val stamp = Stamp("Jimi Hendrix", 2014)
+    stamp.whoAmI_?() should be ("Stamp")
   }
 
   test(
     """You can extends from a trait that was not built in to begin with, be
       |  careful that the trait is instantiated first, and may still not
       |  have a desired effect.""".stripMargin) {
-    pending
+
+    trait Vehicle {
+      def increaseSpeed(mh:Int):Vehicle
+      def decreaseSpeed(mh:Int):Vehicle
+      def currentSpeedMetersPerHour:Int
+      def currentSpeedMilesPerHour:Double =
+        currentSpeedMetersPerHour * 0.000621371
+    }
+
+    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle {
+      override def increaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + mh)
+
+      override def decreaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - mh)
+    }
+
+    trait Counter {
+      var counter = 0
+      def incrementCounter = counter = counter + 1
+    }
+
+    val b = new Bicycle(4) with Counter
+    b.incrementCounter
+    b.incrementCounter
+    b.counter should be (2)
+
+
+    val c = new Bicycle(4) with Counter
+    c.incrementCounter
+    c.incrementCounter
+    c.incrementCounter
+    c.incrementCounter
+    c.incrementCounter
+    c.counter should be (5)
+  }
+
+
+  test("Xia's question on a global counter") {
+
+    trait Counter {
+      var counter = 0
+      def incrementCounter = counter = counter + 1
+    }
+
+    class Country(name:String) {
+      def currentCountOfAll:Int = Country.counter
+
+    }
+    object Country extends Counter
+
+
+    val country1 = new Country("Germany")
+    val country2 = new Country("Zaire")
+    val country3 = new Country("China")
+    val country4 = new Country("India")
+
+    Country.incrementCounter
+    Country.incrementCounter
+    Country.incrementCounter
+    Country.incrementCounter
+
+    country4.currentCountOfAll should be (4)
   }
 
   test(
@@ -33,7 +136,32 @@ class TraitsSpec extends FunSuite with Matchers {
       | to list all the traits you wish to inherit, if you do extends from
       | a superclass then you will extends with one trait and with the
       | remaining traits""".stripMargin) {
-    pending
+    trait Vehicle {
+      def increaseSpeed(mh:Int):Vehicle
+      def decreaseSpeed(mh:Int):Vehicle
+      def currentSpeedMetersPerHour:Int
+    }
+
+    trait FunFactor {
+      def funFactor:Int
+    }
+
+    abstract class RoadVehicle extends Vehicle
+
+    class Bicycle(val currentSpeedMetersPerHour:Int) extends RoadVehicle with FunFactor {
+      override def increaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour + mh)
+
+      override def decreaseSpeed(mh: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerHour - mh)
+
+      override def funFactor: Int = 10
+    }
+
+    new Bicycle(1)
+      .increaseSpeed(3)
+      .decreaseSpeed(1)
+      .currentSpeedMetersPerHour should be (3)
   }
 
   test(
@@ -70,7 +198,15 @@ class TraitsSpec extends FunSuite with Matchers {
     new C1
     list = list :+ "Created C1"
 
-    pending
+    println(">>>" + list)
+
+    //List(Creating C1,
+    //     Instantiated T1,
+    //     Instantiated T2,
+    //     Instantiated T3,
+    //     Instantiated T4,
+    //     Instantiated C1,
+    //     Created C1)
   }
 
   test(
@@ -118,7 +254,7 @@ class TraitsSpec extends FunSuite with Matchers {
     val myQueue = new BasicIntQueue with Doubling with Incrementing
 
     myQueue.put(4)
-    pending
+    myQueue.get() should be (10)
   }
 
   test(
@@ -129,14 +265,13 @@ class TraitsSpec extends FunSuite with Matchers {
       | * When you use self-types, B requires an A
       |
       | This is used for a pattern called the cake pattern, but is also a
-      | way for the class to define the inheritance behaviors""".stripMargin) {
+      | way for the class to define the non-inheritance behaviors""".stripMargin) {
     trait Moveable {
       def increaseSpeed(ms: Int): Moveable
       def decreaseSpeed(ms: Int): Moveable
     }
 
-    trait Vehicle {
-      self: Moveable =>
+    trait Vehicle {self: Moveable =>
       def make: String
       def model: String
     }
