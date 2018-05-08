@@ -65,8 +65,8 @@ class MethodsSpec extends FunSuite with Matchers {
 
   test(
     """Partial Applied Function with a multi-parameter list
-      | can be knocked out to provide only some of the entries, entries
-      | that you can fill in later""".stripMargin) {
+      |  can be knocked out to provide only some of the entries, entries
+      |  that you can fill in later""".stripMargin) {
 
     def multiParameters(w:Int)(x:Int)(y:String, z:String):String = {
       y + (w + x) + z
@@ -106,7 +106,7 @@ class MethodsSpec extends FunSuite with Matchers {
   }
 
   test("""What happens if I have a function as the last group in a
-      | multi parameter list and that function has no parameters?""".stripMargin) {
+      |  multi parameter list and that function has no parameters?""".stripMargin) {
 
      def timer[A](f: () => A):(Long, A) = {
        val start = System.currentTimeMillis()
@@ -160,7 +160,8 @@ class MethodsSpec extends FunSuite with Matchers {
       s"arg1=$arg1, rest=$rest"
     }
 
-    varargs(1, "Foo", "Bar", "Baz", "Qux", "Quux") should be ("arg1=1, rest=WrappedArray(Foo, Bar, Baz, Qux, Quux)")
+    varargs(1, "Foo", "Bar", "Baz", "Qux", "Quux") should be
+      "arg1=1, rest=WrappedArray(Foo, Bar, Baz, Qux, Quux)"
   }
 
   test(

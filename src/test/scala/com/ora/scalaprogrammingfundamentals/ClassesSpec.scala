@@ -6,8 +6,10 @@ class ClassesSpec extends FunSuite with Matchers {
   test(
     """Create a class, and the class should be
       |  instantiable with the elements, but without a val
-      |  I cannot get information. THIS IS WONDERFUL FOR
-      |  UNIT TESTING""".stripMargin) {
+      |  I cannot get information. Having the ability to set
+      |  the function for date is wonderful
+      |  for unit testing. You can also set the constructor
+      |  to protected""".stripMargin) {
 
     val stamp = new Stamp("Jimi Hendrix", 2014, () => 2018)
     stamp.theme should be ("Jimi Hendrix")

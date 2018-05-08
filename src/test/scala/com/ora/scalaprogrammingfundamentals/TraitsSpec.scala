@@ -132,10 +132,11 @@ class TraitsSpec extends FunSuite with Matchers {
 
   test(
     """The confusing thing about traits is that if you
-      | extends from a class then extend with extends, and then use with
-      | to list all the traits you wish to inherit, if you do extends from
-      | a superclass then you will extends with one trait and with the
-      | remaining traits""".stripMargin) {
+      |  extends from a class then extend with extends, and then use with
+      |  to list all the traits you wish to inherit, if you do extends from
+      |  a superclass then you will extends with one trait and with the
+      |  remaining traits""".stripMargin) {
+
     trait Vehicle {
       def increaseSpeed(mh:Int):Vehicle
       def decreaseSpeed(mh:Int):Vehicle
@@ -166,11 +167,11 @@ class TraitsSpec extends FunSuite with Matchers {
 
   test(
     """Avoiding the diamond of death.
-      | https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem.
-      | In Scala, since traits can inherit as a diamond shape,
-      | there has to be a strategy. Instantiation goes from left to right
-      | (used to be right to left),
-      | and instantiation is marked for reuse.""".stripMargin) {
+      |  https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem.
+      |  In Scala, since traits can inherit as a diamond shape,
+      |  there has to be a strategy. Instantiation goes from left to right
+      |  (used to be right to left),
+      |  and instantiation is marked for reuse.""".stripMargin) {
 
     var list = List[String]()
 
@@ -198,15 +199,7 @@ class TraitsSpec extends FunSuite with Matchers {
     new C1
     list = list :+ "Created C1"
 
-    println(">>>" + list)
-
-    //List(Creating C1,
-    //     Instantiated T1,
-    //     Instantiated T2,
-    //     Instantiated T3,
-    //     Instantiated T4,
-    //     Instantiated C1,
-    //     Created C1)
+    list.mkString(", ") should be ("Creating C1, Instantiated T1, Instantiated T2, Instantiated T3, Instantiated T4, Instantiated C1, Created C1")
   }
 
   test(
@@ -259,13 +252,13 @@ class TraitsSpec extends FunSuite with Matchers {
 
   test(
     """Self types declares that a trait must be mixed into another trait.
-      |The relationship is the following:
+      |  The relationship is the following:
       |
-      | * B extends A, then B is an A.
-      | * When you use self-types, B requires an A
+      |     * B extends A, then B is an A.
+      |     * When you use self-types, B requires an A
       |
-      | This is used for a pattern called the cake pattern, but is also a
-      | way for the class to define the non-inheritance behaviors""".stripMargin) {
+      |  This is used for a pattern called the cake pattern, but is also a
+      |  way for the class to define the non-inheritance behaviors""".stripMargin) {
     trait Moveable {
       def increaseSpeed(ms: Int): Moveable
       def decreaseSpeed(ms: Int): Moveable
@@ -276,15 +269,16 @@ class TraitsSpec extends FunSuite with Matchers {
       def model: String
     }
 
-    class Car(val make: String, val model: String, val currentSpeed: Int)
-      extends Vehicle with Moveable {
-      override def increaseSpeed(ms: Int): Moveable = new Car(make, model,
+    class Car(val make: String, val model: String, val currentSpeed: Int) extends Vehicle with Moveable {
+      override def increaseSpeed(ms: Int) = new Car(make, model,
         currentSpeed + ms)
 
-      override def decreaseSpeed(ms: Int): Moveable = new Car(make, model,
-        currentSpeed + ms)
+      override def decreaseSpeed(ms: Int) = new Car(make, model,
+        currentSpeed - ms)
     }
 
-    pending
+    val ford = new Car("Ford", "Fiesta", 110).decreaseSpeed(20)
+    ford.make should be ("Ford")
+    ford.currentSpeed should be (90)
   }
 }
