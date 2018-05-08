@@ -185,3 +185,5 @@ local.properties
 *.log
 .cache-tests
 .idea
+.project
+.classpath
