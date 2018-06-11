@@ -6,39 +6,48 @@ import scala.annotation.tailrec
 
 class MethodsSpec extends FunSuite with Matchers {
   test("In review, a method is structured like the following:") {
-    pending
+    def foo(x:Int):Int = {
+      x + 1
+    }
+
+    foo(4) should be (5)  //ScalaTest assertion
   }
 
   test("Also a method can be inlined if there is only one statement:") {
-    pending
+    def foo(x:Int) = x + 1
+    foo(4) should be (5)
   }
 
-  test(
-    """Methods can be embedded, in case one method is
+  test("""Methods can be embedded, in case one method is
       |  exclusively only being used by another""".stripMargin) {
-    pending
+    def foo(x:Int, y:Int):Int = {
+       def bar(z:Int):Int = z + 10
+       bar(x + y)
+    }
+
+    foo(4, 10) should be (24)
   }
 
   test(
     """Recursion is supported just like another language, here
       |  is a long way attempt to do division in a
       |  recursive style""".stripMargin) {
+
     pending
   }
 
-  test(
-    """Multi-parameter lists are groups or argument lists,
+  test("""Multi-parameter lists are groups or argument lists,
       |  the purpose are two fold: The get group like terms, and
-      |  they make it easy to be partially applied""".stripMargin) {
+      |  they make it easy to be partially applied, another reason is
+      |  for implicits""".stripMargin) {
      pending
   }
 
-  test(
-    """Partial Applications with a multi-parameter list
-      | can be knocked out to provide only some of the entries, entries
-      | that you can fill in later""".stripMargin) {
+  test("""Partial Applied Function with a multi-parameter list
+      |  can be knocked out to provide only some of the entries, entries
+      |  that you can fill in later""".stripMargin) {
 
-    pending
+     pending
   }
 
   test(
@@ -53,12 +62,13 @@ class MethodsSpec extends FunSuite with Matchers {
       |  parameter list group that you want. But being the nature of a function,
       |  a multiline function can be a block.""".stripMargin) {
     pending
+
   }
 
   test("""What happens if I have a function as the last group in a
-      | multi parameter list and that function has no parameters?""".stripMargin) {
+      |  multi parameter list and that function has no parameters?""".stripMargin) {
 
-     pending
+    pending
   }
 
 
@@ -71,8 +81,7 @@ class MethodsSpec extends FunSuite with Matchers {
 
 
   test("""Turning an method into a function""") {
-    def multBy3(x:Int) = x * 3
-    List(1, 2, 3).map(r => multBy3(r)) should contain inOrder (3, 6, 9)
+     pending
   }
 
   test(
@@ -80,7 +89,7 @@ class MethodsSpec extends FunSuite with Matchers {
       |  allow additional parameters and inside the method they
       |  are just a collection called WrappedArray""".stripMargin) {
 
-     pending
+    pending
   }
 
   test(
@@ -88,7 +97,6 @@ class MethodsSpec extends FunSuite with Matchers {
       |  but the problem is what happens when we just send collection
       |  it would treat it as a single unit instead you can expand the units
       |  with a :_*""".stripMargin) {
-
     pending
   }
 
@@ -99,7 +107,6 @@ class MethodsSpec extends FunSuite with Matchers {
       |  is the named parameter. You can set a parameter
       |  explicitly by the name to avoid any confusion as to what you
       |  are setting""".stripMargin) {
-
-    pending
+     pending
   }
 }
