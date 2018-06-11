@@ -60,6 +60,34 @@ class TraitsSpec extends FunSuite with Matchers {
 
   }
 
+
+  test("Extending a trait in an object to create a counter.") {
+
+    trait Counter {
+      var counter = 0
+      def incrementCounter = counter = counter + 1
+    }
+
+    class Country(name:String) {
+      def currentCountOfAll:Int = Country.counter
+
+    }
+    object Country extends Counter
+
+
+    val country1 = new Country("Germany")
+    val country2 = new Country("Zaire")
+    val country3 = new Country("China")
+    val country4 = new Country("India")
+
+    Country.incrementCounter
+    Country.incrementCounter
+    Country.incrementCounter
+    Country.incrementCounter
+
+    country4.currentCountOfAll should be (4)
+  }
+
   test("extends vs. with") {
     val baseballCard =
       new BaseballCard(1998, "Topps", "Ken Griffey Jr.", "Seattle", "Mariners")
