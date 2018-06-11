@@ -1,2 +1,3 @@
-# scala_programming_fundamentals_1
-O'Reilly Scala Programming Fundamentals: IDEs, Methods, Classes
+# scala_core_programming_1
+
+O'Reilly Scala Programming Fundamentals: Methods, Classes, Traits
