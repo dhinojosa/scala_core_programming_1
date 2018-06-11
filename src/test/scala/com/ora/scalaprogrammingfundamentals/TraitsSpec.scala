@@ -8,57 +8,17 @@ class TraitsSpec extends FunSuite with Matchers {
       |  objects can extend traits but traits cannot be instantiated
       |  and therefore have no parameters""".stripMargin) {
 
-    trait Vehicle {
-      def increaseSpeed(mh:Int):Vehicle
-      def decreaseSpeed(mh:Int):Vehicle
-      def currentSpeedMetersPerHour:Int
-    }
-
-    trait FunFactor {
-      def funFactor:Int
-    }
-
-    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle with FunFactor {
-      override def increaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour + mh)
-
-      override def decreaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour - mh)
-
-      override def funFactor: Int = 10
-    }
-
-    new Bicycle(1)
-      .increaseSpeed(3)
-      .decreaseSpeed(1)
-      .currentSpeedMetersPerHour should be (3)
+    pending
   }
 
   test(
     """Just like Java 8 interfaces, you can have concrete
       |  methods (known as default methods in Java)""".stripMargin) {
-    trait Vehicle {
-      def increaseSpeed(mh:Int):Vehicle
-      def decreaseSpeed(mh:Int):Vehicle
-      def currentSpeedMetersPerHour:Int
-      def currentSpeedMilesPerHour:Double =
-        currentSpeedMetersPerHour * 0.000621371
-    }
-
-    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle {
-      override def increaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour + mh)
-
-      override def decreaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour - mh)
-    }
-
-    new Bicycle(4).currentSpeedMilesPerHour should be (0.002 +- .005)
+    pending
   }
 
   test("Traits are used for mixing in functionality, this is called a mixin") {
-    val stamp = Stamp("Jimi Hendrix", 2014)
-    stamp.whoAmI_?() should be ("Stamp")
+    pending
   }
 
   test(
@@ -66,40 +26,7 @@ class TraitsSpec extends FunSuite with Matchers {
       |  careful that the trait is instantiated first, and may still not
       |  have a desired effect.""".stripMargin) {
 
-    trait Vehicle {
-      def increaseSpeed(mh:Int):Vehicle
-      def decreaseSpeed(mh:Int):Vehicle
-      def currentSpeedMetersPerHour:Int
-      def currentSpeedMilesPerHour:Double =
-        currentSpeedMetersPerHour * 0.000621371
-    }
-
-    class Bicycle(val currentSpeedMetersPerHour:Int) extends Vehicle {
-      override def increaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour + mh)
-
-      override def decreaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour - mh)
-    }
-
-    trait Counter {
-      var counter = 0
-      def incrementCounter = counter = counter + 1
-    }
-
-    val b = new Bicycle(4) with Counter
-    b.incrementCounter
-    b.incrementCounter
-    b.counter should be (2)
-
-
-    val c = new Bicycle(4) with Counter
-    c.incrementCounter
-    c.incrementCounter
-    c.incrementCounter
-    c.incrementCounter
-    c.incrementCounter
-    c.counter should be (5)
+    pending
   }
 
 
@@ -137,32 +64,7 @@ class TraitsSpec extends FunSuite with Matchers {
       |  a superclass then you will extends with one trait and with the
       |  remaining traits""".stripMargin) {
 
-    trait Vehicle {
-      def increaseSpeed(mh:Int):Vehicle
-      def decreaseSpeed(mh:Int):Vehicle
-      def currentSpeedMetersPerHour:Int
-    }
-
-    trait FunFactor {
-      def funFactor:Int
-    }
-
-    abstract class RoadVehicle extends Vehicle
-
-    class Bicycle(val currentSpeedMetersPerHour:Int) extends RoadVehicle with FunFactor {
-      override def increaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour + mh)
-
-      override def decreaseSpeed(mh: Int): Vehicle =
-        new Bicycle(currentSpeedMetersPerHour - mh)
-
-      override def funFactor: Int = 10
-    }
-
-    new Bicycle(1)
-      .increaseSpeed(3)
-      .decreaseSpeed(1)
-      .currentSpeedMetersPerHour should be (3)
+    pending
   }
 
   test(
