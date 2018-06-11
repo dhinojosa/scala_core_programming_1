@@ -30,7 +30,7 @@ class TraitsSpec extends FunSuite with Matchers {
   }
 
 
-  test("Xia's question on a global counter") {
+  test("Extending a trait in an object to create a counter.") {
 
     trait Counter {
       var counter = 0
