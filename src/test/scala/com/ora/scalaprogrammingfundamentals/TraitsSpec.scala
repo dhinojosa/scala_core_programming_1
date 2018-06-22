@@ -2,31 +2,87 @@ package com.ora.scalaprogrammingfundamentals
 
 import org.scalatest.{FunSuite, Matchers}
 
+import scala.collection.mutable.ListBuffer
+
 class TraitsSpec extends FunSuite with Matchers {
   test(
     """A trait is analogous to an interface in Java. Classes and
       |  objects can extend traits but traits cannot be instantiated
       |  and therefore have no parameters""".stripMargin) {
 
-    pending
+    trait Vehicle {
+      def increaseSpeed(ms: Int): Vehicle
+
+      def decreaseSpeed(ms: Int): Vehicle
+
+      def currentSpeedMetersPerSecond: Int
+    }
+
+    class Bicycle(val currentSpeedMetersPerSecond: Int) extends Vehicle {
+      override def increaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond + ms)
+
+      override def decreaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond - ms)
+    }
+
+    new Bicycle(1)
+      .increaseSpeed(3)
+      .decreaseSpeed(1)
+      .currentSpeedMetersPerSecond should be(3)
   }
 
   test(
     """Just like Java 8 interfaces, you can have concrete
       |  methods (known as default methods in Java)""".stripMargin) {
-    pending
+
+    trait Vehicle {
+      def increaseSpeed(ms: Int): Vehicle
+
+      def decreaseSpeed(ms: Int): Vehicle
+
+      def currentSpeedMetersPerSecond: Int
+
+      final def currentSpeedMilesPerHour: Double = currentSpeedMetersPerSecond *
+        0.000621371
+    }
+
+    class Bicycle(val currentSpeedMetersPerSecond: Int) extends Vehicle {
+      override def increaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond + ms)
+
+      override def decreaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond - ms)
+    }
+
+    new Bicycle(1)
+      .increaseSpeed(3)
+      .decreaseSpeed(1)
+      .currentSpeedMetersPerSecond should be(3)
+
+
   }
 
   test("Traits are used for mixing in functionality, this is called a mixin") {
-    pending
+    val stamp = Stamp("Jimi Hendrix", 2014)
+    stamp.whoAmI_?() should be("Stamp")
   }
 
   test(
     """You can extends from a trait that was not built in to begin with, be
       |  careful that the trait is instantiated first, and may still not
       |  have a desired effect.""".stripMargin) {
+    trait Logging {
+      val loggedItems = ListBuffer[String]() //mutable
+      def log(x: String): Unit = loggedItems += x
+      def logItems = loggedItems.toList
+    }
 
-    pending
+
+    val a = new Object() with Logging
+    a.log("Hello")
+    a.log("World")
+    a.logItems should contain inOrder("Hello", "World")
   }
 
 
@@ -34,11 +90,12 @@ class TraitsSpec extends FunSuite with Matchers {
 
     trait Counter {
       var counter = 0
+
       def incrementCounter = counter = counter + 1
     }
 
-    class Country(name:String) {
-      def currentCountOfAll:Int = Country.counter
+    class Country(name: String) {
+      def currentCountOfAll: Int = Country.counter
 
     }
     object Country extends Counter
@@ -54,7 +111,7 @@ class TraitsSpec extends FunSuite with Matchers {
     Country.incrementCounter
     Country.incrementCounter
 
-    country4.currentCountOfAll should be (4)
+    country4.currentCountOfAll should be(4)
   }
 
   test(
@@ -101,7 +158,8 @@ class TraitsSpec extends FunSuite with Matchers {
     new C1
     list = list :+ "Created C1"
 
-    list.mkString(", ") should be ("Creating C1, Instantiated T1, Instantiated T2, Instantiated T3, Instantiated T4, Instantiated C1, Created C1")
+    list.mkString(", ") should be(
+      "Creating C1, Instantiated T1, Instantiated T2, Instantiated T3, Instantiated T4, Instantiated C1, Created C1")
   }
 
   test(
@@ -149,7 +207,7 @@ class TraitsSpec extends FunSuite with Matchers {
     val myQueue = new BasicIntQueue with Doubling with Incrementing
 
     myQueue.put(4)
-    myQueue.get() should be (10)
+    myQueue.get() should be(10)
   }
 
   test(
@@ -160,18 +218,23 @@ class TraitsSpec extends FunSuite with Matchers {
       |     * When you use self-types, B requires an A
       |
       |  This is used for a pattern called the cake pattern, but is also a
-      |  way for the class to define the non-inheritance behaviors""".stripMargin) {
+      |  way for the class to define the non-inheritance behaviors"""
+      .stripMargin) {
     trait Moveable {
       def increaseSpeed(ms: Int): Moveable
+
       def decreaseSpeed(ms: Int): Moveable
     }
 
-    trait Vehicle {self: Moveable =>
+    trait Vehicle {
+      self: Moveable =>
       def make: String
+
       def model: String
     }
 
-    class Car(val make: String, val model: String, val currentSpeed: Int) extends Vehicle with Moveable {
+    class Car(val make: String, val model: String, val currentSpeed: Int)
+      extends Vehicle with Moveable {
       override def increaseSpeed(ms: Int) = new Car(make, model,
         currentSpeed + ms)
 
@@ -180,7 +243,7 @@ class TraitsSpec extends FunSuite with Matchers {
     }
 
     val ford = new Car("Ford", "Fiesta", 110).decreaseSpeed(20)
-    ford.make should be ("Ford")
-    ford.currentSpeed should be (90)
+    ford.make should be("Ford")
+    ford.currentSpeed should be(90)
   }
 }
