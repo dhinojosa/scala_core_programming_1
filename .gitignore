@@ -187,3 +187,9 @@ local.properties
 .idea
 .project
 .classpath
+### Ensime template
+# Ensime specific
+**/.ensime
+**/.ensime_cache/
+**/.ensime_lucene/
+
