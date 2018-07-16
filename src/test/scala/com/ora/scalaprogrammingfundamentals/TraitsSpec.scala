@@ -59,11 +59,13 @@ class TraitsSpec extends FunSuite with Matchers {
       .increaseSpeed(3)
       .decreaseSpeed(1)
       .currentSpeedMetersPerSecond should be(3)
-
-
   }
 
-  test("Traits are used for mixing in functionality, this is called a mixin") {
+  test("""Traits are used for mixing in functionality,
+      |  this is called a mixin. In this case, we have
+      |  a trait called Introspection (see src/main/scala).
+      |  Internally it will return the name of the class
+      |  that is mixed into it.""".stripMargin) {
     val stamp = Stamp("Jimi Hendrix", 2014)
     stamp.whoAmI_?() should be("Stamp")
   }
@@ -73,44 +75,15 @@ class TraitsSpec extends FunSuite with Matchers {
       |  careful that the trait is instantiated first, and may still not
       |  have a desired effect.""".stripMargin) {
     trait Logging {
-      val loggedItems = ListBuffer[String]() //mutable
+      val loggedItems: ListBuffer[String] = ListBuffer[String]() //mutable
       def log(x: String): Unit = loggedItems += x
-      def logItems = loggedItems.toList
+      def logItems: List[String] = loggedItems.toList
     }
-
 
     val a = new Object() with Logging
     a.log("Hello")
     a.log("World")
     a.logItems should contain inOrder("Hello", "World")
-  }
-
-
-  test("Xia's question on a global counter") {
-
-    trait Counter {
-      var counter = 0
-      def incrementCounter = counter = counter + 1
-    }
-
-    class Country(name: String) {
-      def currentCountOfAll: Int = Country.counter
-    }
-
-    object Country extends Counter
-
-
-    val country1 = new Country("Germany")
-    val country2 = new Country("Zaire")
-    val country3 = new Country("China")
-    val country4 = new Country("India")
-
-    Country.incrementCounter
-    Country.incrementCounter
-    Country.incrementCounter
-    Country.incrementCounter
-
-    country4.currentCountOfAll should be(4)
   }
 
   test(
@@ -120,8 +93,71 @@ class TraitsSpec extends FunSuite with Matchers {
       |  a superclass then you will extends with one trait and with the
       |  remaining traits""".stripMargin) {
 
-    pending
+    trait MyMixin {
+      def bar(z:Int): Int = z + 3
+    }
+    class MySuperclass(val x:Int)
+    class MySubclass(x:Int, val y:String) extends MySuperclass(x) with MyMixin
+
+    val mySubclass = new MySubclass(3, "Foo")
+    mySubclass.bar(10) should be (13)
   }
+
+
+  test("""Lab: Given our bicycle example, we need to mixin
+         |  a fun factor! Create a trait called FunFactor
+         |  inside of this test!
+         |  FunFactor should have one abstract method called
+         |  funFactor that returns an Int.
+         |  Either mix in the trait into the Bicycle class
+         |  or mix it onto a already
+         |  created Bicycle instance, be sure to
+         |  have an implementation of the funFactor method""".stripMargin) {
+
+    pending
+
+    trait Vehicle {
+      def increaseSpeed(ms: Int): Vehicle
+
+      def decreaseSpeed(ms: Int): Vehicle
+
+      def currentSpeedMetersPerSecond: Int
+
+      final def currentSpeedMilesPerHour: Double = currentSpeedMetersPerSecond *
+        0.000621371
+    }
+
+    class Bicycle(val currentSpeedMetersPerSecond: Int) extends Vehicle {
+      override def increaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond + ms)
+
+      override def decreaseSpeed(ms: Int): Vehicle =
+        new Bicycle(currentSpeedMetersPerSecond - ms)
+    }
+  }
+
+  test("A previous attendees question on mixing in a global counter!") {
+
+    trait Counter {
+      var counter = 0
+      def incrementCounter = counter = counter + 1
+    }
+
+    class Country(name: String) {
+      Country.incrementCounter
+      def currentCountOfAll: Int = Country.counter
+    }
+
+    object Country extends Counter
+
+    val country1 = new Country("Germany")
+    val country2 = new Country("Zaire")
+    val country3 = new Country("China")
+    val country4 = new Country("India")
+
+    country4.currentCountOfAll should be(4)
+  }
+
 
   test(
     """Avoiding the diamond of death.

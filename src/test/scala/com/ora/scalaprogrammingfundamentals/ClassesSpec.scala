@@ -41,18 +41,52 @@ class ClassesSpec extends FunSuite with Matchers {
   }
 
   test("Subclassing in Scala") {
-    new SportsCard(1985, "Topps", "Ken Griffey Jr.")
+    val baseballCard =
+      new BaseballCard(1952, "Topps",
+        "Mickey Mantle", "American", "Eastern")
+    baseballCard.year should be (1952)
+    baseballCard.manufacturer should be ("Topps")
+    baseballCard.playerName should be ("Mickey Mantle")
   }
 
   test("Abstract Classes in Scala") {
-    pending
+    val baseballCard =
+      new BaseballCard(1952, "Topps",
+                             "Mickey Mantle", "American", "Eastern")
+    baseballCard shouldBe a [Collectible]
+    baseballCard shouldBe a [BaseballCard]
   }
 
   test("Generic Classes in Scala") {
-    pending
+     val baseballCard =
+        new BaseballCard(1952, "Topps",
+        "Mickey Mantle", "American", "Eastern")
+     val box = new Box(baseballCard)
+     box.contents.year should be (1952)
+     box.contents.playerName should be ("Mickey Mantle")
   }
 
   test("Generic Classes in Scala with our own map") {
+    val baseballCard =
+      new BaseballCard(1952, "Topps",
+        "Mickey Mantle", "American", "Eastern")
+    val baseballCardBox = new Box(baseballCard)
+    val yearBox = baseballCardBox.map(bc => bc.year)
+    yearBox.contents should be (1952)
+  }
+
+  test("""Lab: Create two classes. One Employee, and One Manager.
+      |  The Employee should have a firstName, possibly a middleName,
+      |  and possibly a last name. The operative word is possibly.
+      |  The Manager is a subtype of Employee and has the same
+      |  properties except that it also has a property
+      |  of a list of Employees. When creating an Employee, create
+      |  an API that allows for the end user to leave out the middle name.
+      |  Put the Employee and Manager in the
+      |  src/main/scala folder and in the
+      |  com.ora.scalaprogrammingfundamentals package. In this
+      |  test create two Employees and and one Manager who is charge of the
+      |  Employees, assert that the number of employees is two.""".stripMargin) {
     pending
   }
 }

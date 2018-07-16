@@ -172,11 +172,8 @@ class MethodsSpec extends FunSuite with Matchers {
       | and partially apply by providing a seed of 1 and letting the function
       | go unresolved. Then invoke that new function two times
       | One with addition and the other with multiplication""".stripMargin) {
-
      pending
      val xs = List(1,2,3)
-
-
   }
 
   test(
