@@ -2,48 +2,38 @@ package com.ora.scalaprogrammingfundamentals
 
 import org.scalatest.{FunSuite, Matchers}
 
-import scala.annotation.tailrec
-
 class MethodsSpec extends FunSuite with Matchers {
   test("In review, a method is structured like the following:") {
     def foo(x: Int): Int = {
       x + 1
     }
-
     foo(4) should be(5) //ScalaTest assertion
   }
 
   test("Also a method can be inlined if there is only one statement:") {
     def foo(x: Int): Int = x + 1
-
     foo(4) should be(5)
   }
 
-  test(
-    """Methods can be embedded, in case one method is
+  test("""Methods can be embedded, in case one method is
       |  exclusively only being used by another""".stripMargin) {
     def foo(x: Int, y: Int): Int = {
       def bar(): Int = x + y + 10
-
       bar()
     }
-
     foo(4, 10) should be(24)
   }
 
-  test(
-    """Recursion is supported just like another language, here
-      |  is a long way attempt to do division in a
-      |  recursive style""".stripMargin) {
 
-    def divide(numerator: Int, denominator: Int): Option[Int] = {
-      def divideHelper(num: Int, count: Int): Option[Int] =
-        if (num < denominator) Some(count)
-        else divideHelper(num - denominator, count + 1)
+  test("""Lab: Recursion is supported just like another
+      |  language, here we will do division a long
+      |  way attempt to do
+      |  division in a recursive style, extra points
+      |  for doing it in tail recursive way""".stripMargin) {
 
-      if (denominator == 0) None
-      else divideHelper(numerator, 0)
-    }
+    pending
+
+    def divide(numerator: Int, denominator: Int): Option[Int] = ???
 
     divide(1, 0) should be(None)
     divide(1, 1) should be(Some(1))
@@ -65,8 +55,7 @@ class MethodsSpec extends FunSuite with Matchers {
     foo(3)(5)("<<<", ">>>") should be ("<<<8>>>")
   }
 
-  test(
-    """Partial Applied Function with a multi-parameter list
+  test("""Partial Applied Function with a multi-parameter list
       |  can be knocked out to provide only some of the entries, entries
       |  that you can fill in later""".stripMargin) {
 
@@ -80,21 +69,29 @@ class MethodsSpec extends FunSuite with Matchers {
     fun("***", "***") should be ("***7***")
   }
 
-  test(
-    """In multi-parameter lists you can use a function. Typically
+  test("""In multi-parameter lists you can use a function. Typically
       |  the function is in the last parameter group, but it's your code,
       |  you can put it wherever you please""".stripMargin) {
-
     def foo(x:Int, y:Int)(f:Int => String) = f(x * y)
     val f1 = (v1:Int) => s"The value is $v1"
     foo(40, 10)(f1) should be ("The value is 400")
   }
 
-  test(
-    """You can also use functions as arguments in whatever
+  test("""This can also be partially applied where we can defer
+          |  the function until some other time.""".stripMargin) {
+    def foo(x:Int, y:Int)(f:Int => String) = f(x * y)
+    def f1 = foo(3, 2)_
+
+    val result1 = f1(v1 => s"The value is $v1")
+    val result2 = f1(v2 => "Hello" * v2)
+
+    result1 should be ("The value is 6")
+    result2 should be ("HelloHelloHelloHelloHelloHello")
+  }
+
+  test("""You can also use functions as arguments in whatever
       |  parameter list group that you want. But being the nature of a function,
       |  a multiline function can be a block.""".stripMargin) {
-
 
     def foo(x:Int, y:Int)(f:Int => String) = f(x * y)
 
@@ -154,17 +151,32 @@ class MethodsSpec extends FunSuite with Matchers {
     item should be (60)
   }
 
-
   test("""Turning an method into a function""") {
     def foo(x:Int, y:Int, z:Int) = x + y + z
     val f: (Int, Int, Int) => Int = foo _
     f(3, 5, 10) should be (18)
+  }
 
-    def myApply[T](x:T, y:T)(implicit ord:Ordering[T]) =
-      if (ord.gt(x, y)) x else y
+  test("""Turning a method into a function selectively""") {
+     def foo(x:Int, y:Int, z:Int) = x + y + z
+     val f = foo(3, _:Int, 4)
+     f(5) should be (12)
+  }
 
-    def myApply2[T <: Ordered[T]](x:T, y:T) =
-      if (x < y) x else y
+  test(
+    """Lab: Reusing a foldLeft. Fold left is a method
+      | on a collection that reduces the elements to single element,
+      | Look at the signature for fold left in the Scala API.
+      | It takes two multi-parameters, a seed, and a function.
+      | What you need to do is take the list (xs) established below,
+      | and partially apply by providing a seed of 1 and letting the function
+      | go unresolved. Then invoke that new function two times
+      | One with addition and the other with multiplication""".stripMargin) {
+
+     pending
+     val xs = List(1,2,3)
+
+
   }
 
   test(
@@ -177,7 +189,7 @@ class MethodsSpec extends FunSuite with Matchers {
     }
 
     zoom(3, "Hello", "World", "Scala") should be
-    ("a:3, rest:WrappedArray(Hello, World, Scala)")
+      ("a:3, rest:WrappedArray(Hello, World, Scala)")
   }
 
   test(
@@ -189,11 +201,9 @@ class MethodsSpec extends FunSuite with Matchers {
       s"a:$a, rest:$rest"
     }
 
-    zoom(3, List("Hello", "World", "Scala")) should be
-    ("a:3, rest:WrappedArray(List(Hello, World, Scala))")
+    zoom(3, List("Hello", "World", "Scala")) should be ("a:3, rest:WrappedArray(List(Hello, World, Scala))")
 
-    zoom(3, List("Hello", "World", "Scala"):_*) should be
-    ("a:3, rest:List(Hello, World, Scala)")
+    zoom(3, List("Hello", "World", "Scala"):_*) should be ("a:3, rest:List(Hello, World, Scala)")
   }
 
   test(
@@ -203,11 +213,6 @@ class MethodsSpec extends FunSuite with Matchers {
       |  is the named parameter. You can set a parameter
       |  explicitly by the name to avoid any confusion as to what you
       |  are setting""".stripMargin) {
-//    def foo(x:Int)(y:Int)(a:String = "##", b:String = "##") = {
-//      a + (x + y) + b
-//    }
-//
-//    foo(3)(4)_ should be ("##7##")
 
     def bar(x:Int, y:Int, a:String = "##", b:String = "##") = {
       a + (x + y) + b

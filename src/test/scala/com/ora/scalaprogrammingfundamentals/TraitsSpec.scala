@@ -90,14 +90,13 @@ class TraitsSpec extends FunSuite with Matchers {
 
     trait Counter {
       var counter = 0
-
       def incrementCounter = counter = counter + 1
     }
 
     class Country(name: String) {
       def currentCountOfAll: Int = Country.counter
-
     }
+
     object Country extends Counter
 
 
@@ -229,7 +228,6 @@ class TraitsSpec extends FunSuite with Matchers {
     trait Vehicle {
       self: Moveable =>
       def make: String
-
       def model: String
     }
 

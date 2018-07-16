@@ -53,13 +53,6 @@ class ClassesSpec extends FunSuite with Matchers {
   }
 
   test("Generic Classes in Scala with our own map") {
-    val box = new Box(40)
-    val resultBox = box.map(i => i * 50)
-    resultBox.a should be (2000)
-
-
-    val box2: Box[String] = new Box("Hello")
-    val resultBox2 = box2.map(s => s.size)
-    resultBox2.a should be (5)
+    pending
   }
 }
